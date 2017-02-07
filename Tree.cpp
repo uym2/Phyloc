@@ -7,7 +7,7 @@ using namespace std;
 
 class Node{
 	string label;
-	int edge;
+	double edge;
 public:
 	vector<Node*> children;
 	Node(){
@@ -30,18 +30,27 @@ public:
 		return true;
 	}
 
+	double get_edge(){
+		return this->edge;
+	}
+	bool set_edge(double e){
+		this->edge = e;
+		return true;
+	}
+
 	bool writeNewick(ofstream &fout){
 		if (!this->children.empty())
 		{
 			fout << "(";
-			this->children[0]->writeNewick(fout);
-			for (int i = 1; i < this->children.size(); i++){
+			int n = this->children.size();
+			this->children[n-1]->writeNewick(fout);
+			for (int i = n-2; i >= 0; i--){
 				fout << ",";
 				this->children[i]->writeNewick(fout);
 			}
 			fout << ")";
 		}
-		fout << this->get_label();
+		fout << this->get_label() << ":" << this->get_edge();
 	}
 };
 
@@ -58,6 +67,7 @@ public:
 
 	bool readNewick(string treefile){
 		char c;
+		bool wait_for_int_lab = false;
 		stack<Node*> stk;
 
 		string label = "";
@@ -71,18 +81,27 @@ public:
 			}
 			else if (c == ',')  {
 				if (label != ""){
-					Node *p = new Node;
-					p->set_label(label);
-					stk.push(p);
-					//cout << label << endl;
+					if (!wait_for_int_lab){
+						Node *p = new Node;
+						p->set_label(label);
+						stk.push(p);
+					} else {
+						stk.top()->set_label(label);
+					}
+					label = "";
 				}
 				label = "";
+				wait_for_int_lab = false;
 			} else if (c == ')'){
 				if (label != ""){
-					Node *p = new Node;
-					p->set_label(label);
-					stk.push(p);
-					//cout << label << endl;
+					if (!wait_for_int_lab){
+						Node *p = new Node;
+						p->set_label(label);
+						stk.push(p);
+					} else {
+						stk.top()->set_label(label);
+					}
+					label = "";
 				}
 				Node *p = new Node;
 				Node *q;
@@ -99,11 +118,27 @@ public:
 				}
 				stk.push(p);
 				label = "";
+				wait_for_int_lab = true;
 			} else if (c == ';'){
 				this->root = stk.top();
 				//this->root->set_label("root");
 				stk.pop();
 				break;
+			} else if (c == ':'){
+				if (label != ""){
+					if (!wait_for_int_lab){
+						Node *p = new Node;
+						p->set_label(label);
+						stk.push(p);
+					} else {
+						stk.top()->set_label(label);
+					}
+					label = "";
+				}
+				double e;
+				fin >> e;
+				stk.top()->set_edge(e);
+				wait_for_int_lab = false;
 			}
 			else {
 				label += c;
@@ -126,6 +161,6 @@ public:
 
 int main(){
 	Tree a_tree;
-	a_tree.readNewick("avian_topo.tre");
+	a_tree.readNewick("avian_fixed.tre");
 	a_tree.writeNewick("out.tre");
 }
