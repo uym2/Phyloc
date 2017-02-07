@@ -1,8 +1,0 @@
-#To compile:
-g++ -pipe -O2 -std=c++14 3DAln.cpp -o 3DAln -lm
-#Example
-./seqAlign.sh -i highrate3.fasta -o highrate3.aln -p 0.1
-./seqAlign.sh -i lowrate3.fasta -o lowrate3.aln -p 0.01
-
-#Note: 3DAln can only align 3 sequences. The input file must include exactly 3 sequences and must be in FASTA format
-#Note: the program was "hard code" to read file "BLOSUM62" as its substitution matrix. Please don't remove that file.
