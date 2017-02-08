@@ -13,6 +13,7 @@ using namespace std;
 
 class SubMtrx{
 	map <string,int> mapping;
+	string aa;
 	float avg_rate = 0;
 	
 public:
@@ -20,7 +21,7 @@ public:
 		ifstream fin;
 		fin.open(file);
 		string line;
-		string aa;
+		//string aa;
 		getline(fin,line);
 		for (int i=0; i<line.length(); i++){
 			if (line[i] != ' ')
