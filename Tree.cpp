@@ -1,71 +1,73 @@
-#include <iostream>
-#include <string>
-#include <vector>
-#include <stack>
-#include <fstream>
-using namespace std;
+#include "Tree.h"
 
-class Node{
-	string label;
-	double edge;
-public:
-	vector<Node*> children;
-	Node(){
-		this->label = "";
-		this->edge = 0;
-	}
-	Node(string label){
-		this->label = label;
-		this->edge = 0;
-	}
-	~Node(){
-		for (int i = 0; i < this->children.size(); i++)
-			delete this->children[i];
-	}
-	string get_label(){
-		return this->label;
-	}
-	bool set_label(string s){
-		this->label = s;
-		return true;
-	}
+Node::Node(){
+	this->label = "";
+	this->edge = 0;
+}
 
-	double get_edge(){
-		return this->edge;
-	}
-	bool set_edge(double e){
-		this->edge = e;
-		return true;
-	}
+Node::Node(string label){
+	this->label = label;
+	this->edge = 0;
+}
 
-	bool writeNewick(ofstream &fout){
-		if (!this->children.empty())
-		{
-			fout << "(";
-			int n = this->children.size();
-			this->children[n-1]->writeNewick(fout);
-			for (int i = n-2; i >= 0; i--){
-				fout << ",";
-				this->children[i]->writeNewick(fout);
-			}
-			fout << ")";
+Node::~Node(){
+	for (int i = 0; i < this->children.size(); i++)
+		delete this->children[i];
+}
+
+string Node::get_label(){
+	return this->label;
+}
+
+bool Node::set_label(string s){
+	this->label = s;
+	return true;
+}
+
+
+bool Node::add_child(Node *ch){
+	this->children.push_back(ch);
+	return true;
+}
+
+double Node::get_edge(){
+	return this->edge;
+}
+
+bool Node::set_edge(double e){
+	this->edge = e;
+	return true;
+}
+
+bool Node::writeNewick(ofstream &fout){
+	if (!this->children.empty())
+	{
+		fout << "(";
+		int n = this->children.size();
+		this->children[n-1]->writeNewick(fout);
+		for (int i = n-2; i >= 0; i--){
+			fout << ",";
+			this->children[i]->writeNewick(fout);
 		}
-		fout << this->get_label() << ":" << this->get_edge();
+		fout << ")";
 	}
-};
+	fout << this->get_label() << ":" << this->get_edge();
+}
 
-class Tree{
-	Node *root;
-public:
-	Tree(){
-		root = NULL;
-	}
-	~Tree(){
-		delete root;
-	}
+Tree::Tree(){
+	root = NULL;
+}
 
+Tree::~Tree(){
+	delete root;
+}
 
-	bool readNewick(string treefile){
+Node* Tree::create_node(){
+	Node *p = new Node;
+	return p;
+}
+
+bool Tree::readNewick(string treefile){
 		char c;
 		bool wait_for_int_lab = false;
 		stack<Node*> stk;
@@ -82,7 +84,8 @@ public:
 			else if (c == ',')  {
 				if (label != ""){
 					if (!wait_for_int_lab){
-						Node *p = new Node;
+						//Node *p = new Node;
+						Node *p = this->create_node();
 						p->set_label(label);
 						stk.push(p);
 					} else {
@@ -95,7 +98,8 @@ public:
 			} else if (c == ')'){
 				if (label != ""){
 					if (!wait_for_int_lab){
-						Node *p = new Node;
+						//Node *p = new Node;
+						Node *p = this->create_node();
 						p->set_label(label);
 						stk.push(p);
 					} else {
@@ -103,7 +107,8 @@ public:
 					}
 					label = "";
 				}
-				Node *p = new Node;
+				//Node *p = new Node;
+				Node *p = this->create_node();
 				Node *q;
 				while (1){
 					q = stk.top();
@@ -111,7 +116,8 @@ public:
 					if (q)
 					{
 						//cout << "I pushed back something!" << endl;
-						p->children.push_back(q);
+						//p->children.push_back(q);
+						p->add_child(q);
 					}
 					else
 						break;
@@ -127,7 +133,8 @@ public:
 			} else if (c == ':'){
 				if (label != ""){
 					if (!wait_for_int_lab){
-						Node *p = new Node;
+						//Node *p = new Node;
+						Node *p = this->create_node();
 						p->set_label(label);
 						stk.push(p);
 					} else {
@@ -148,7 +155,7 @@ public:
 		return true;
 	}
 	
-	bool writeNewick(string treefile){
+bool Tree::writeNewick(string treefile){
 		ofstream fout;
 		fout.open(treefile);
 		//this->root->set_label("root");
@@ -157,7 +164,6 @@ public:
 		fout << ";";
 		fout.close();
 	}
-};
 
 int main(){
 	Tree a_tree;
