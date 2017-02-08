@@ -7,84 +7,9 @@
 #include <cmath>
 #include <vector>
 #include <stdlib.h>
+#include "Aligner.h"
 
 using namespace std;
-
-
-class SubMtrx{
-	map <string,int> mapping;
-	string aa;
-	float avg_rate = 0;
-	
-public:
-	SubMtrx(string file){
-		ifstream fin;
-		fin.open(file);
-		string line;
-		getline(fin,line);
-		for (int i=0; i<line.length(); i++){
-			if (line[i] != ' ')
-				aa.push_back(line[i]);
-		}
-		avg_rate = 0;
-		int count = 0;
-		while (!fin.eof()){
-			char a;
-			fin >> a;
-			int score;
-			for (int i =0; i<aa.length(); i++){
-				fin >> score;
-				string key = "xx";
-				key[0] = a;
-				key[1] = aa[i];
-				mapping[key] = score;
-				avg_rate += pow(float(2),score);
-				count++;
-			}
-		}
-		avg_rate /= count;
-	}
-	float score(string key){
-		return mapping[key];
-	}
-
-	float score(char c1, char c2){
-		string key = "xx";
-		key[0] = c1;
-		key[1] = c2;
-		return mapping[key];
-	}
-	
-	float get_rate(){
-		return this->avg_rate;
-	}
-	char best_match(char c){
-		char best = this->aa[0];
-		float best_score = this->score(c,best);
-
-		for (int i = 1; i < this->aa.length(); i++){
-			float curr_score = this->score(c,aa[i]);
-			if (curr_score > best_score || (curr_score == best_score && aa[i] == c)){
-				best_score = curr_score;
-				best = aa[i];
-			}
-		}
-		return best;
-	}
-	char best_match(char c1, float r1, char c2, float r2){
-		char best = this->aa[0];
-		float best_score = r1*this->score(c1,best) + r2*this->score(c2,best);
-		
-		for (int i = 1; i < this->aa.length(); i++){
-			float curr_score = r1*this->score(c1,aa[i]) + r2*this->score(c2,aa[i]);
-			if (curr_score > best_score || (curr_score == best_score && (aa[i] == c1|| aa[i] == c2))){
-				best_score = curr_score;
-				best = aa[i];
-			}
-		}
-		return best;
-	}
-};
 
 float inferAln(string* &aln, string S0, float d1, string S1, float d2, SubMtrx m, float idrate){
 	int alpha = floor(log2(m.get_rate()*idrate));

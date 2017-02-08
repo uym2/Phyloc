@@ -7,56 +7,14 @@
 #include <cmath>
 #include <vector>
 #include <stdlib.h>
+#include "Aligner.h"
+
 
 using namespace std;
 
 
-class SubMtrx{
-	map <string,int> mapping;
-	string aa;
-	float avg_rate = 0;
-	
-public:
-	SubMtrx(string file){
-		ifstream fin;
-		fin.open(file);
-		string line;
-		//string aa;
-		getline(fin,line);
-		for (int i=0; i<line.length(); i++){
-			if (line[i] != ' ')
-				aa.push_back(line[i]);
-		}
-		avg_rate = 0;
-		int count = 0;
-		while (!fin.eof()){
-			char a;
-			fin >> a;
-			int score;
-			for (int i =0; i<aa.length(); i++){
-				fin >> score;
-				string key = "xx";
-				key[0] = a;
-				key[1] = aa[i];
-				mapping[key] = score;
-				avg_rate += pow(float(2),score);
-				count++;
-			}
-		}
-		avg_rate /= count;
-		//cout << avg_rate << endl;
-	}
-	int score(string key){
-		return mapping[key];
-	}
-	int sub_rate(){
-		return this->avg_rate;
-	}
-};
-
-
 string* Align(string S1, string S2, string S3, SubMtrx m,float indel_rate){
-	int alpha = floor(log2(m.sub_rate()*indel_rate));
+	int alpha = floor(log2(m.get_rate()*indel_rate));
 	//cout << alpha << endl;
 	string *aln = new string[3];
 	int ***scoring = new int**[S1.length()+1];
@@ -81,22 +39,21 @@ string* Align(string S1, string S2, string S3, SubMtrx m,float indel_rate){
 				vector<int> aln_scores;
 				int aln_all = -10000, aln_12 = -10000,aln_13 = -10000,aln_23 = -10000,
 					aln_1 = -10000, aln_2 = -10000,aln_3 = -10000;
-				string str="";
 				if (i>0 && j>0 && k>0){
-					aln_all = scoring[i-1][j-1][k-1] + m.score(str+S1[i-1]+S2[j-1])
-							+ m.score(str+S1[i-1]+S3[k-1]) + m.score(str+S2[j-1]+S3[k-1]);
+					aln_all = scoring[i-1][j-1][k-1] + m.score(S1[i-1],S2[j-1])
+							+ m.score(S1[i-1],S3[k-1]) + m.score(S2[j-1],S3[k-1]);
 					aln_scores.push_back(aln_all);
 				}
 				if (i>0 && j>0){
-					aln_12 =  scoring[i-1][j-1][k] + 2*alpha + m.score(str+S1[i-1]+S2[j-1]);
+					aln_12 =  scoring[i-1][j-1][k] + 2*alpha + m.score(S1[i-1],S2[j-1]);
 					aln_scores.push_back(aln_12);
 				} 
 				if (i>0 && k>0){
-					aln_13 =  scoring[i-1][j][k-1] + 2*alpha + m.score(str+S1[i-1]+S3[k-1]);
+					aln_13 =  scoring[i-1][j][k-1] + 2*alpha + m.score(S1[i-1],S3[k-1]);
 					aln_scores.push_back(aln_13);
 				}
 				if (j>0 && k>0){
-					aln_23 =  scoring[i][j-1][k-1] + 2*alpha + m.score(str+S2[j-1]+S3[k-1]);
+					aln_23 =  scoring[i][j-1][k-1] + 2*alpha + m.score(S2[j-1],S3[k-1]);
 					aln_scores.push_back(aln_23);
 				}
 				if (i>0){
