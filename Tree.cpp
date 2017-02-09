@@ -63,6 +63,7 @@ Tree::~Tree(){
 }
 
 Node* Tree::create_node(){
+	cout << "Created a normal node" << endl;
 	Node *p = new Node;
 	return p;
 }
@@ -164,9 +165,9 @@ bool Tree::writeNewick(string treefile){
 		fout << ";";
 		fout.close();
 	}
-
+/*
 int main(){
 	Tree a_tree;
 	a_tree.readNewick("avian_fixed.tre");
 	a_tree.writeNewick("out.tre");
-}
+}*/

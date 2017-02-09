@@ -18,7 +18,7 @@ class SubMtrx{
 	float avg_rate = 0;
 	
 public:
-	SubMtrx(string file);
+	SubMtrx(string file="BLOSUM62");
 	
 	float score(string key);
 	
@@ -30,3 +30,7 @@ public:
 
 	char best_match(char c1, float r1, char c2, float r2);
 };
+
+
+float inferAln(vector<string> &aln, string S0, float d1, string S1, float d2, SubMtrx m, float idrate);
+float pairAln(vector<string> &aln, string S0, string S1, SubMtrx m, float idrate);

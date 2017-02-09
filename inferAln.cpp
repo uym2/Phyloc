@@ -11,7 +11,7 @@
 
 using namespace std;
 
-float inferAln(string* &aln, string S0, float d1, string S1, float d2, SubMtrx m, float idrate){
+float inferAln(vector<string> &aln, string S0, float d1, string S1, float d2, SubMtrx m, float idrate){
 	int alpha = floor(log2(m.get_rate()*idrate));
 	float d = d1+d2;
 	float r1 = d/d1, r2 = d/d2;
@@ -97,29 +97,33 @@ float inferAln(string* &aln, string S0, float d1, string S1, float d2, SubMtrx m
 	}
 	// backtrack
 	int i = S1.length(), j = S0.length();
-	aln = new string[3];
-	
+	//aln = new string[3];
+	string aln0,aln1,aln2;	
+
 	while (i > 0 || j > 0){
-		aln[2] = infer[i][j] + aln[2];
+		aln2 = infer[i][j] + aln2;
 		switch (backtrack[i][j]){
 			case 'D':
-				aln[0] = S0[j-1] + aln[0];
-				aln[1] = S1[i-1] + aln[1];
+				aln0 = S0[j-1] + aln0;
+				aln1 = S1[i-1] + aln1;
 				i--;
 				j--;
 				break;
 			case 'L':
-				aln[0] = S0[j-1] + aln[0];
-				aln[1] = '-' + aln[1];
+				aln0 = S0[j-1] + aln0;
+				aln1 = '-' + aln1;
 				j--;
 				break;
 			case 'U':
-				aln[0] = '-' + aln[0];
-				aln[1] = S1[i-1] + aln[1];
+				aln0 = '-' + aln0;
+				aln1 = S1[i-1] + aln1;
 				i--;
 				break;
 		}	
 	}
+	aln.push_back(aln0);
+	aln.push_back(aln1);
+	aln.push_back(aln2);
 	return scoring[S1.length()][S0.length()];
 }
 
@@ -129,13 +133,13 @@ int main(int argc, char* argv[]){
 	string S0 = "PMIDAVPEGNDMTAKNKDLYIRSILGDKFDQQAALSKLDDAYLLECMYIANIKTVSILDNGLPSVTQPTYVSADTRRLKIRIAEWVDWNMSEDLIIYICYRLPSDFTVSAIKSIIAIAYSNRQADLAEAQAVLTKMCRGRFVFEGVKAKENSAQELAARTRKLKCNGRVEYAATFFMGVALKAVTSAQPGQIRGAKLD";
 	string S1 = "PLSDARPEINEMTAKNKEVYWRSILGDKFDQQAALSKLDEAYLIEGMYIANIETQHVSILDNGLPIVVQPIYVDADDRRLKIRIASWIDWYISEDLIIYICVRLPSDFNISAIKSMAQKQLVLAKMCRGRFVFEGVKDKENVAQELPARTRDLECNGRNEYPTTFFLGVAIKAITTAQPTQMKGAKLD";
 	
-	string *aln;
+	vector<string> aln;
 	cout << inferAln(aln,S0,2,S1,1,M,0.01) << endl;
 	
 	cout << S0 << endl << S1 << endl << endl;
 	cout << aln[2] << endl << aln[0] << endl << aln[1] << endl;
 
-	delete [] aln;
+	//delete [] aln;
 
 	return 0;
 }
