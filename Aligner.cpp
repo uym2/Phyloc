@@ -213,12 +213,12 @@ float inferAln(vector<string> &aln, string S0, float d1, string S1, float d2, Su
 			}
 		
 		// find the best of all
-			if (score_match > score_g0 && score_match > score_g1){
+			if (score_match >= score_g0 && score_match >= score_g1){
 				scoring[i][j] = score_match;
 				backtrack[i][j] = 'D'; // diagonal
 				infer[i][j] = x_match;
 			}
-			else if (score_g0 > score_match && score_g0 > score_g1){
+			else if (score_g0 >= score_match && score_g0 >= score_g1){
 				scoring[i][j] = score_g0;
 				backtrack[i][j] = 'U'; // up
 				infer[i][j] = x_g0;
