@@ -24,6 +24,16 @@ bool Node::set_label(string s){
 	return true;
 }
 
+int Node::nchild(){
+	return this->children.size();
+}
+
+Node* Node::get_child(int n){
+	Node* ch = NULL;
+	if (n >= 0 && n < this->children.size())
+		ch = this->children[n];
+	return ch;
+}
 
 bool Node::add_child(Node *ch){
 	this->children.push_back(ch);
@@ -62,11 +72,11 @@ Tree::~Tree(){
 	delete root;
 }
 
-Node* Tree::create_node(){
+/*Node* Tree::create_node(){
 	cout << "Created a normal node" << endl;
 	Node *p = new Node;
 	return p;
-}
+}*/
 
 bool Tree::readNewick(string treefile){
 		char c;

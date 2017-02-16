@@ -9,45 +9,48 @@
 using namespace std;
 
 class Node{
-public:
+	vector<Node*> children;
 	string label;
 	double edge;
-	vector<Node*> children;
-//public:
-	//vector<Node*> children;
+public:
 	Node();
 	Node(string label);
 	~Node();
+	
 	bool set_label(string s);
 	string get_label();
+	
 	double get_edge();
 	bool set_edge(double e);
+
+	Node* get_child(int n);	
+	int nchild();
+
 	bool writeNewick(ofstream &fout);
 	bool add_child(Node *ch);
 	bool is_leaf(){ return this->children.empty(); }
+	
+	virtual bool add_aln(string newAln) = 0;
+	
+	virtual bool mapSeq(map<string,string> seq_map) = 0;
 
-	
-	virtual bool add_aln(string newAln) { return false; };
-	
-	virtual bool mapSeq(map<string,string> seq_map) {return false;}
-	
-	virtual float btmupAln(SubMtrx m, float idrate) {return false;}
-	
-	virtual bool polyAln(SubMtrx m, float idrate) {return false;} // align polytomies
-	
-	virtual string get_seq() {return "";}
-	
-	virtual bool set_seq() {return false;}
+	virtual float btmupAln(SubMtrx m, float idrate) = 0;	
 
-	virtual bool transitAln(vector<string> &refAln, int shareIdx) {return false;}
+	virtual bool polyAln(SubMtrx m, float idrate) = 0 ; 	
 
-	virtual bool add_gaps(int pos) {return false;}
-
-	virtual bool printAln(ofstream &fout) {return false;}
-
-	virtual vector<string>& getAln() { vector<string> dummy; return dummy;}
+	virtual string get_seq() = 0 ;
 	
-	virtual vector<string>& getLeafLabel() { vector<string> dummy; return dummy;}
+	virtual bool set_seq() = 0;
+
+	virtual bool transitAln(vector<string> &refAln, int shareIdx) = 0;
+
+	virtual bool add_gaps(int pos) = 0;
+
+	virtual bool printAln(ofstream &fout) = 0;
+
+	virtual vector<string>& getAln() = 0;
+	
+	virtual vector<string>& getLeafLabel() = 0;
 };
 
 class Tree{
@@ -58,5 +61,5 @@ public:
 	~Tree();
 	bool readNewick(string treefile);
 	bool writeNewick(string treefile);
-	virtual Node* create_node();
+	virtual Node* create_node() = 0;
 };
