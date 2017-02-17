@@ -60,7 +60,7 @@ public:
 		fout.open(file);
 		if (!fout)
 			return false;
-		this->root->printAln(fout);
+		this->get_root()->printAln(fout);
 		fout.close();
 		return true;
 	}

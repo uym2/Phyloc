@@ -54,12 +54,12 @@ public:
 };
 
 class Tree{
-public:
 	Node *root;
-//public:
+public:
 	Tree();
 	~Tree();
 	bool readNewick(string treefile);
 	bool writeNewick(string treefile);
+	Node*& get_root() { return this->root; }
 	virtual Node* create_node() = 0;
 };

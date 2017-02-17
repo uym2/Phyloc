@@ -22,11 +22,11 @@ bool AlnTree::mapSeq2Tree(string seqfile){
 	}
 	fin.close();
 
-	return this->root->mapSeq(seq_map);
+	return this->get_root()->mapSeq(seq_map);
 }
 
 bool AlnTree::btmupAln(){
-	this->root->btmupAln(this->m,this->idrate);
+	this->get_root()->btmupAln(this->m,this->idrate);
 	return true;
 }
 
