@@ -1,8 +1,51 @@
 #include "EvolTree.h"
 #include <cmath>
+#include <random>
 
 #define EPSILON 0.000001
 
+bool EvolNode::gen_seqs(const matrix<double> & R){
+	if (this->is_leaf())
+		return true;
+	for (int i = 0; i < this->nchild(); i++){
+		this->get_child(i)->gen_seqs(R);
+	}
+}
+
+
+char EvolNode::randit(const std::vector<double> &dtrb){
+	std::random_device rd;
+	std::mt19937 gen(rd());
+    	std::uniform_real_distribution<> dis(0, 1);
+	double r = dis(gen);
+	int i = 0;
+	double s = dtrb[0];
+
+	while (s < r)
+		s += dtrb[++i];
+
+	switch (i)
+	{
+		case 0:
+			this->mySeq.push_back('A');
+			return 'A';
+		case 1:
+			this->mySeq.push_back('C');
+			return 'C';
+		case 2:
+			this->mySeq.push_back('G');
+			return 'G';
+		case 3:
+			this->mySeq.push_back('T');
+			return 'T';
+	}
+}
+
+bool EvolTree::seq_root(const std::vector<double> &pi, int N){
+	for (int i = 0; i < N; i++)
+		this->get_root()->randit(pi);
+	return true;
+}
 
 bool EvolTree::set_R(string param_file){
 	ifstream fin;
@@ -28,7 +71,7 @@ bool EvolTree::set_R(string param_file){
 
 	return this->set_R(pi,rate);
 }
-bool EvolTree::set_R(std::vector<double> pi, std::vector<double> rate){
+bool EvolTree::set_R(const std::vector<double> &pi, const std::vector<double> &rate){
 	// rate order: CT AT GT AC CG AG
 
 	if (pi.size() != 4 || rate.size() != 6){
@@ -72,17 +115,17 @@ bool EvolTree::set_R(std::vector<double> pi, std::vector<double> rate){
 	this->R(2,2) = GG/r;
 	this->R(3,3) = TT/r;
 
-	this->R(0,1) = pi[3]/r;
-	this->R(0,2) = pi[5]/r;
-	this->R(0,3) = pi[1]/r;
+	this->R(0,1) = rate[3]/r;
+	this->R(0,2) = rate[5]/r;
+	this->R(0,3) = rate[1]/r;
 
 	this->R(1,0) = CA/r;
-	this->R(1,2) = pi[4]/r;
-	this->R(1,3) = pi[0]/r;
+	this->R(1,2) = rate[4]/r;
+	this->R(1,3) = rate[0]/r;
 
 	this->R(2,0) = GA/r;
 	this->R(2,1) = GC/r;
-	this->R(2,3) = pi[2]/r;
+	this->R(2,3) = rate[2]/r;
 
 	this->R(3,0) = TA/r;
 	this->R(3,1) = TC/r;

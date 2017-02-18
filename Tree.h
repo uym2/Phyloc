@@ -4,12 +4,15 @@
 #include <stack>
 #include <map>
 #include <fstream>
+#include <boost/expm.hpp>
+#include <boost/numeric/ublas/matrix.hpp>
+#include <boost/numeric/ublas/io.hpp>
 #include "Aligner.h"
 
 using namespace std;
-
+using namespace boost::numeric::ublas;
 class Node{
-	vector<Node*> children;
+	std::vector<Node*> children;
 	string label;
 	double edge;
 public:
@@ -38,19 +41,25 @@ public:
 
 	virtual bool polyAln(SubMtrx m, float idrate) = 0 ; 	
 
-	virtual string get_seq() = 0 ;
+	virtual string& get_seq() = 0;
 	
 	virtual bool set_seq() = 0;
 
-	virtual bool transitAln(vector<string> &refAln, int shareIdx) = 0;
+	virtual bool transitAln(std::vector<string> &refAln, int shareIdx) = 0;
 
 	virtual bool add_gaps(int pos) = 0;
 
 	virtual bool printAln(ofstream &fout) = 0;
 
-	virtual vector<string>& getAln() = 0;
+	virtual std::vector<string>& getAln() = 0;
 	
-	virtual vector<string>& getLeafLabel() = 0;
+	virtual std::vector<string>& getLeafLabel() = 0;
+
+	virtual bool set_seq(string seq) = 0;
+	
+	virtual bool gen_seqs(const matrix<double> &R) = 0;
+	
+	virtual char randit(const std::vector<double> &dtrb) = 0;
 };
 
 class Tree{
