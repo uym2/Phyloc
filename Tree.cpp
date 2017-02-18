@@ -28,12 +28,13 @@ int Node::nchild(){
 	return this->children.size();
 }
 
-Node* Node::get_child(int n){
-	Node* ch = NULL;
+/*
+myNode* Node::get_child(int n){
+	myNode* ch = NULL;
 	if (n >= 0 && n < this->children.size())
 		ch = this->children[n];
 	return ch;
-}
+}*/
 
 bool Node::add_child(Node *ch){
 	this->children.push_back(ch);
@@ -81,7 +82,7 @@ Tree::~Tree(){
 bool Tree::readNewick(string treefile){
 		char c;
 		bool wait_for_int_lab = false;
-		stack<Node*> stk;
+		stack<myNode*> stk;
 
 		string label = "";
 		ifstream fin;
@@ -96,7 +97,7 @@ bool Tree::readNewick(string treefile){
 				if (label != ""){
 					if (!wait_for_int_lab){
 						//Node *p = new Node;
-						Node *p = this->create_node();
+						myNode *p = this->create_node();
 						p->set_label(label);
 						stk.push(p);
 					} else {
@@ -110,7 +111,7 @@ bool Tree::readNewick(string treefile){
 				if (label != ""){
 					if (!wait_for_int_lab){
 						//Node *p = new Node;
-						Node *p = this->create_node();
+						myNode *p = this->create_node();
 						p->set_label(label);
 						stk.push(p);
 					} else {
@@ -119,8 +120,8 @@ bool Tree::readNewick(string treefile){
 					label = "";
 				}
 				//Node *p = new Node;
-				Node *p = this->create_node();
-				Node *q;
+				myNode *p = this->create_node();
+				myNode *q;
 				while (1){
 					q = stk.top();
 					stk.pop();
@@ -145,7 +146,7 @@ bool Tree::readNewick(string treefile){
 				if (label != ""){
 					if (!wait_for_int_lab){
 						//Node *p = new Node;
-						Node *p = this->create_node();
+						myNode *p = this->create_node();
 						p->set_label(label);
 						stk.push(p);
 					} else {

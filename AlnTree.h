@@ -1,10 +1,9 @@
 #include "Tree.h"
 
 class AlnNode: public Node{
-//	vector<string> Aln;
+	typedef AlnNode myNode;
 	string mySeq;
 public:
-	//vector<AlnNode*> children;
 	vector<string> leafLabel;
 	vector<string> Aln;
 	bool add_aln(string newAln){
@@ -40,16 +39,18 @@ public:
 class AlnTree: public Tree{
 	SubMtrx m;
 	float idrate;
+	typedef AlnNode myNode;
 public:
 	//AlnNode* root;
 	AlnTree(SubMtrx m, float idrate)
 		{ this->m=m; this->idrate=idrate; }
 
-	Node* create_node(){
+	myNode* create_node(){
 		//cout << "Created an AlnNode" << endl;
-		Node* p = new AlnNode;
+		myNode* p = new AlnNode;
 		return p;
 	}
+
 
 	bool mapSeq2Tree(string seqfile);
 

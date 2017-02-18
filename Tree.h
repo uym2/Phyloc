@@ -9,7 +9,8 @@
 using namespace std;
 
 class Node{
-	vector<Node*> children;
+	typedef Node myNode;
+	vector<myNode*> children;
 	string label;
 	double edge;
 public:
@@ -23,14 +24,14 @@ public:
 	double get_edge();
 	bool set_edge(double e);
 
-	Node* get_child(int n);	
+	myNode*& get_child(int n) { return this->children[n]; }	
 	int nchild();
 
 	bool writeNewick(ofstream &fout);
-	bool add_child(Node *ch);
+	bool add_child(myNode *ch);
 	bool is_leaf(){ return this->children.empty(); }
 	
-	virtual bool add_aln(string newAln) = 0;
+	/*virtual bool add_aln(string newAln) = 0;
 	
 	virtual bool mapSeq(map<string,string> seq_map) = 0;
 
@@ -50,16 +51,17 @@ public:
 
 	virtual vector<string>& getAln() = 0;
 	
-	virtual vector<string>& getLeafLabel() = 0;
+	virtual vector<string>& getLeafLabel() = 0;*/
 };
 
 class Tree{
-	Node *root;
+	typedef Node myNode;
+	myNode *root;
 public:
 	Tree();
 	~Tree();
 	bool readNewick(string treefile);
 	bool writeNewick(string treefile);
-	Node*& get_root() { return this->root; }
-	virtual Node* create_node() = 0;
+	myNode*& get_root() { return this->root; }
+	virtual myNode* create_node() = 0;
 };
