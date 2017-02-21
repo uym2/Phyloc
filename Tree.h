@@ -33,33 +33,33 @@ public:
 	bool add_child(Node *ch);
 	bool is_leaf(){ return this->children.empty(); }
 	
-	virtual bool add_aln(string newAln) = 0;
+	virtual bool add_aln(string newAln) { return false;}
 	
-	virtual bool mapSeq(map<string,string> seq_map) = 0;
+	virtual bool mapSeq(map<string,string> seq_map) { return false;}
 
-	virtual float btmupAln(SubMtrx m, float idrate) = 0;	
+	virtual float btmupAln(SubMtrx m, float idrate) { return false;}	
 
-	virtual bool polyAln(SubMtrx m, float idrate) = 0 ; 	
+	virtual bool polyAln(SubMtrx m, float idrate) { return false;}	
 
-	virtual string& get_seq() = 0;
+	virtual string get_seq() { string s; return s;}
 	
-	virtual bool set_seq() = 0;
+	virtual bool set_seq() { return false;}
 
-	virtual bool transitAln(std::vector<string> &refAln, int shareIdx) = 0;
+	virtual bool transitAln(std::vector<string> &refAln, int shareIdx) { return false;}
 
-	virtual bool add_gaps(int pos) = 0;
+	virtual bool add_gaps(int pos) { return false;}
 
-	virtual bool printAln(ofstream &fout) = 0;
+	virtual bool printAln(ofstream &fout) { return false;}
 
-	virtual std::vector<string>& getAln() = 0;
+	virtual std::vector<string>& getAln() {std::vector<string> foo; return foo; }
 	
-	virtual std::vector<string>& getLeafLabel() = 0;
+	virtual std::vector<string>& getLeafLabel() {std::vector<string> foo; return foo; }
 
-	virtual bool set_seq(string seq) = 0;
+	virtual bool set_seq(string seq) { return false;}
 	
-	virtual bool gen_seqs(const matrix<double> &R) = 0;
+	virtual bool gen_seqs(const matrix<double> &R) { return false;}
 	
-	virtual char randit(const std::vector<double> &dtrb) = 0;
+	virtual char randit(const std::vector<double> &dtrb) { return 'x';};
 };
 
 class Tree{

@@ -121,7 +121,7 @@ bool AlnNode::polyAln(SubMtrx m, float idrate){
 	if (this->nchild() <= 2)
 		return false;
 	for (int i = 2; i < this->nchild(); i++){
-		vector<string> newAln;
+		std::vector<string> newAln;
 		pairAln(newAln,this->get_child(i)->get_seq(),this->get_seq(),m,idrate); // notice: order matters here
 		this->transitAln(newAln,1);
 		this->add_aln(newAln[0]);			
@@ -142,13 +142,13 @@ bool AlnNode::add_gaps(int pos){
 	return true;
 }
 
-bool insert_gaps(vector<string> &aln, int pos){
+bool insert_gaps(std::vector<string> &aln, int pos){
 	for (int i = 0; i < aln.size(); i++)
 		aln[i].insert(aln[i].begin()+pos,'-');
 	return true;
 }
 
-bool AlnNode::transitAln(vector<string> &refAln,int shareIdx){
+bool AlnNode::transitAln(std::vector<string> &refAln,int shareIdx){
 	for (int i = 0; i < refAln[shareIdx].size(); i++){
 		if (this->Aln.back()[i] != refAln[shareIdx][i]){
 			if (this->Aln.back()[i] == '-'){

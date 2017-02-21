@@ -1,12 +1,10 @@
 #include "Tree.h"
 
 class AlnNode: public Node{
-//	vector<string> Aln;
 	string mySeq;
+	std::vector<string> leafLabel;
+	std::vector<string> Aln;
 public:
-	//vector<AlnNode*> children;
-	vector<string> leafLabel;
-	vector<string> Aln;
 	bool add_aln(string newAln){
 		this->Aln.insert(Aln.end()-1,newAln);
 		return true;}
@@ -21,7 +19,7 @@ public:
 	
 	bool set_seq();
 
-	bool transitAln(vector<string> &refAln,int shareIdx);
+	bool transitAln(std::vector<string> &refAln,int shareIdx);
 
 	bool add_gaps(int pos);
 
@@ -33,8 +31,8 @@ public:
 		return true;
 	}
 
-	vector<string>& getAln() { return this->Aln;}
-	vector<string>& getLeafLabel() {return this->leafLabel;}
+	std::vector<string>& getAln() { return this->Aln;}
+	std::vector<string>& getLeafLabel() {return this->leafLabel;}
 };
 
 class AlnTree: public Tree{
