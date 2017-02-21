@@ -31,27 +31,27 @@ public:
 	bool add_child(myNode *ch);
 	bool is_leaf(){ return this->children.empty(); }
 	
-	/*virtual bool add_aln(string newAln) = 0;
+	virtual bool add_aln(string newAln) { return false; }
 	
-	virtual bool mapSeq(map<string,string> seq_map) = 0;
+	virtual bool mapSeq(map<string,string> seq_map)  { return false; }
 
-	virtual float btmupAln(SubMtrx m, float idrate) = 0;	
+	virtual float btmupAln(SubMtrx m, float idrate)  { return false; }	
 
-	virtual bool polyAln(SubMtrx m, float idrate) = 0 ; 	
+	virtual bool polyAln(SubMtrx m, float idrate)  { return false; }
 
-	virtual string get_seq() = 0 ;
+	virtual string get_seq() { return "";}
 	
-	virtual bool set_seq() = 0;
+	virtual bool set_seq() { return false; }
 
-	virtual bool transitAln(vector<string> &refAln, int shareIdx) = 0;
+	virtual bool transitAln(vector<string> &refAln, int shareIdx) { return false; }
 
-	virtual bool add_gaps(int pos) = 0;
+	virtual bool add_gaps(int pos) {return false; }
 
-	virtual bool printAln(ofstream &fout) = 0;
+	virtual bool printAln(ofstream &fout) { return false; }
 
-	virtual vector<string>& getAln() = 0;
+	virtual vector<string>& getAln() { vector<string> foo; return foo; }
 	
-	virtual vector<string>& getLeafLabel() = 0;*/
+	virtual vector<string>& getLeafLabel() {vector<string> foo; return foo; }
 };
 
 class Tree{
